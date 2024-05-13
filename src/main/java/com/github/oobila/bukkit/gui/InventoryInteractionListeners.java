@@ -1,7 +1,6 @@
 package com.github.oobila.bukkit.gui;
 
 import com.github.oobila.bukkit.common.ABCommon;
-import com.github.oobila.bukkit.common.CannotFindABCoreException;
 import com.github.oobila.bukkit.gui.cells.Cell;
 import com.github.oobila.bukkit.gui.cells.ItemCell;
 import org.bukkit.Bukkit;
@@ -69,21 +68,17 @@ class InventoryInteractionListeners implements Listener {
 
     private void updateItemCells(Gui gui, Inventory inventory) {
         gui.awaitingUpdate = true;
-        try {
-            ABCommon.runTask(() -> {
-                try {
-                    for (int i = 0; i < gui.getInventorySize(); i++) {
-                        if (gui.getInventoryCell(i) instanceof ItemCell itemCell) {
-                            itemCell.setItemStack(inventory.getItem(i));
-                        }
+        ABCommon.runTask(() -> {
+            try {
+                for (int i = 0; i < gui.getInventorySize(); i++) {
+                    if (gui.getInventoryCell(i) instanceof ItemCell itemCell) {
+                        itemCell.setItemStack(inventory.getItem(i));
                     }
-                } finally {
-                    gui.awaitingUpdate = false;
                 }
-            });
-        } catch (CannotFindABCoreException e) {
-            throw new RuntimeException(e);
-        }
+            } finally {
+                gui.awaitingUpdate = false;
+            }
+        });
     }
 
 }

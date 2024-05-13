@@ -1,7 +1,6 @@
 package com.github.oobila.bukkit.gui;
 
 import com.github.oobila.bukkit.common.ABCommon;
-import com.github.oobila.bukkit.common.CannotFindABCoreException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,13 +22,9 @@ class InventoryCloseListener implements Listener {
 
     private void handleClose(Player player, Inventory inventory, Gui gui) {
         if (gui.awaitingUpdate) {
-            try {
-                ABCommon.runTask(() ->
-                        handleClose(player, inventory, gui)
-                );
-            } catch (CannotFindABCoreException e) {
-                throw new RuntimeException(e);
-            }
+            ABCommon.runTask(() ->
+                    handleClose(player, inventory, gui)
+            );
         } else {
             gui.onGuiClose(player, inventory, gui);
         }
