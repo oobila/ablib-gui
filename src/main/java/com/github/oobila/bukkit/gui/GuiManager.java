@@ -24,6 +24,7 @@ public class GuiManager {
         GuiManager.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new InventoryInteractionListeners(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new InventoryCloseListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
     }
 
     public static void closeAll(){
