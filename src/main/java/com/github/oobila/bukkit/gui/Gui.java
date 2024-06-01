@@ -48,6 +48,9 @@ public abstract class Gui implements GuiInterface, CellCollectionInterface {
 
         //set contents
         inventory.setContents(getCellIcons());
+        for (int i = 0; i < inventory.getSize(); i++) {
+            getInventoryCell(i).onBind(i);
+        }
 
         //tracking
         GuiManager.lastOpenedGui.put(player, this);

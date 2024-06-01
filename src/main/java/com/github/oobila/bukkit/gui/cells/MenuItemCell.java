@@ -24,7 +24,7 @@ public abstract class MenuItemCell extends Cell {
 
     public void updateItemStack(ItemStack itemStack, Inventory inventory) {
         setItemStack(itemStack);
-        inventory.setItem(getIndex(), itemStack);
+        inventory.setItem(getInventoryPosition(), itemStack);
         Bukkit.getScheduler().scheduleSyncDelayedTask(
                 getPlugin(), () ->
                         inventory.getViewers().forEach(humanEntity -> {
