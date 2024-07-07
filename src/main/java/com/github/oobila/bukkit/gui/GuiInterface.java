@@ -6,7 +6,7 @@ import com.github.oobila.bukkit.gui.cells.Cell;
 public interface GuiInterface {
 
     int getInventorySize();
-    <T extends Cell<T>> Cell<T> getInventoryCell(int position);
-    NullCell getBlockedCell();
+    <T extends Cell<T>> T getInventoryCell(int position);
+    NullCell getNullCell();
 
 }

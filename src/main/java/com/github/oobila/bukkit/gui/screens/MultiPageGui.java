@@ -113,18 +113,19 @@ public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
     }
 
     @Override
-    public Cell<?> getInventoryCell(int position) {
+    public <S extends Cell<S>> S getInventoryCell(int position) {
         if (position < 9) {
-            return header[position];
-        } else if ((position - 9) < size()){
-            return get(pageIndex * PAGE_SIZE + (position - 9));
+            return (S) header[position];
+        } else if ((position - 9) < getAllocatedSize()){
+            S cell = (S) get(pageIndex * PAGE_SIZE + (position - 9));
+            if (cell == null) {
+                return (S) this.getNullCell();
+            } else {
+                return cell;
+            }
         } else {
-            return getBlockedCell();
+            return (S) this.getNullCell();
         }
     }
 
-    @Override
-    public NullCell getBlockedCell() {
-        return new NullCell();
-    }
 }
