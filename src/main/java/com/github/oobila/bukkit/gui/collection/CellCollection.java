@@ -113,7 +113,9 @@ public class CellCollection<T extends Cell<T>> implements CellCollectionInterfac
     }
 
     private void onAdd(int index, T element) {
-        element.onCollectionBind(this, index);
+        if (element != null) {
+            element.onCollectionBind(this, index);
+        }
     }
 
     @Override
