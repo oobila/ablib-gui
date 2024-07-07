@@ -30,9 +30,14 @@ class InventoryInteractionListeners implements Listener {
         //get Cell
         if (e.getRawSlot() < gui.getInventorySize()) { //in gui
             T cell = (T) gui.getInventoryCell(e.getRawSlot());
-            if(cell == null) {
+            if (cell == null) {
                 e.setCancelled(true);
                 return;
+            }
+
+            //stop the shift click action but acknowledge as normal click and continue
+            if (e.isShiftClick()) {
+                e.setCancelled(true);
             }
 
             //make on click action
