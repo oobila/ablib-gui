@@ -4,6 +4,7 @@ import com.github.oobila.bukkit.gui.cells.model.NullCell;
 import com.github.oobila.bukkit.gui.cells.Cell;
 import com.github.oobila.bukkit.gui.collection.CellCollection;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -16,11 +17,12 @@ import java.util.List;
 @Getter
 public abstract class Gui<T extends Cell<T>> extends CellCollection<T> implements GuiInterface {
 
+    private static final InventoryType inventoryType = InventoryType.PLAYER;
     private final String title;
     private final Plugin plugin;
     private final Player player;
-    private NullCell nullCell;
-    private InventoryType inventoryType = InventoryType.PLAYER;
+    @Setter
+    private NullCell nullCell = new NullCell();
     boolean awaitingUpdate = false;
 
     protected Gui(int allocatedSize, String title, Plugin plugin, Player player) {
