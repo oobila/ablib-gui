@@ -43,4 +43,19 @@ public abstract class MenuItemCell<T extends MenuItemCell<T>> extends Cell<T> {
         return itemStack;
     }
 
+    public abstract static class MenuItemCellBuilder<S extends MenuItemCell<S>, C extends MenuItemCell<S>, B extends MenuItemCell.MenuItemCellBuilder<S, C, B>>
+            extends Cell.CellBuilder<S, C, B> {
+
+        public B itemStack(ItemStack itemStack) {
+            this.itemStack = new GuiItemStack(itemStack);
+            return this.self();
+        }
+
+        public B itemStack(GuiItemStack itemStack) {
+            this.itemStack = itemStack;
+            return this.self();
+        }
+
+    }
+
 }
