@@ -18,13 +18,13 @@ public abstract class SimpleGui<T extends Cell<T>> extends Gui<T> {
 
     protected SimpleGui(int allocatedSize, String title, Plugin plugin, Player player) {
         super(allocatedSize, title, plugin, player);
-        this.screenSize = getScreenSize(size());
+        this.screenSize = getScreenSize(getAllocatedSize());
         setup();
     }
 
     protected SimpleGui(List<T> cells, String title, Plugin plugin, Player player) {
         super(cells, title, plugin, player);
-        this.screenSize = getScreenSize(size());
+        this.screenSize = getScreenSize(getAllocatedSize());
         setup();
     }
 
