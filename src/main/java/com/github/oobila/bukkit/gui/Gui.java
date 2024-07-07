@@ -1,55 +1,57 @@
 package com.github.oobila.bukkit.gui;
 
-import com.github.oobila.bukkit.gui.cells.CellCollection;
-import com.github.oobila.bukkit.gui.cells.CellCollectionInterface;
+import com.github.oobila.bukkit.gui.cells.model.NullCell;
+import com.github.oobila.bukkit.gui.cells.Cell;
+import com.github.oobila.bukkit.gui.collection.CellCollection;
 import lombok.Getter;
-import lombok.experimental.Delegate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-public abstract class Gui implements GuiInterface, CellCollectionInterface {
+import java.util.List;
 
-    @Delegate(types = CellCollection.class)
-    private final CellCollection cellCollection;
+@Getter
+public abstract class Gui<T extends Cell<T>> extends CellCollection<T> implements GuiInterface {
 
-    @Getter
+    private final String title;
     private final Plugin plugin;
-
-    @Getter
     private final Player player;
-
-    @Getter
-    protected String title;
-
-    protected InventoryType inventoryType = InventoryType.PLAYER;
-
+    private NullCell nullCell;
+    private InventoryType inventoryType = InventoryType.PLAYER;
     boolean awaitingUpdate = false;
 
-    protected Gui(Plugin plugin, Player player, String title, CellCollection cellCollection) {
+    protected Gui(int allocatedSize, String title, Plugin plugin, Player player) {
+        super(allocatedSize);
+        this.title = title == null ? "" : title;
         this.plugin = plugin;
         this.player = player;
-        this.title = title;
-        this.cellCollection = cellCollection;
     }
 
-    protected void onGuiLoad(Player player, Inventory inventory, Gui gui){}
+    protected Gui(List<T> cells, String title, Plugin plugin, Player player) {
+        super(cells);
+        this.title = title == null ? "" : title;
+        this.plugin = plugin;
+        this.player = player;
+    }
 
-    protected void onGuiClose(Player player, Inventory inventory, Gui gui){}
+    protected void onGuiLoad(Player player, Inventory inventory){}
 
-    public Gui openGui() {
+    protected void onGuiClose(Player player, Inventory inventory){}
+
+    public Gui<T> open() {
         //create inventory
         Inventory inventory = createInventory();
 
         //listeners
-        onGuiLoad(player, inventory, this);
+        onGuiLoad(player, inventory);
 
         //set contents
         inventory.setContents(getCellIcons());
         for (int i = 0; i < inventory.getSize(); i++) {
-            getInventoryCell(i).onBind(i);
+            getInventoryCell(i).onInventoryBind(i);
         }
 
         //tracking
@@ -59,15 +61,6 @@ public abstract class Gui implements GuiInterface, CellCollectionInterface {
         player.closeInventory();
         player.openInventory(inventory);
         return this;
-    }
-
-    public void reload() {
-        if (GuiManager.openGuis.containsKey(player)) {
-            Gui guiBase = GuiManager.openGuis.get(player);
-            if (guiBase.equals(this)) {
-                player.getOpenInventory().getTopInventory().setContents(getCellIcons());
-            }
-        }
     }
 
     protected Inventory createInventory(){
@@ -85,4 +78,19 @@ public abstract class Gui implements GuiInterface, CellCollectionInterface {
             );
         }
     }
+
+    public void reload() {
+        if (GuiManager.openGuis.containsKey(player) && GuiManager.openGuis.get(player).equals(this)) {
+            player.getOpenInventory().getTopInventory().setContents(getCellIcons());
+        }
+    }
+
+    private ItemStack[] getCellIcons() {
+        ItemStack[] itemStacks = new ItemStack[getInventorySize()];
+        for (int i = 0; i < getInventorySize(); i++) {
+            itemStacks[i] = getInventoryCell(i).getIcon();
+        }
+        return itemStacks;
+    }
+
 }

@@ -1,12 +1,15 @@
 package com.github.oobila.bukkit.gui.cells;
 
+import com.github.oobila.bukkit.gui.Gui;
 import com.github.oobila.bukkit.gui.GuiItemStack;
+import lombok.experimental.SuperBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class MenuItemCell extends Cell {
+@SuperBuilder
+public abstract class MenuItemCell<T extends MenuItemCell<T>> extends Cell<T> {
 
     private GuiItemStack itemStack;
 
@@ -26,7 +29,8 @@ public abstract class MenuItemCell extends Cell {
         setItemStack(itemStack);
         inventory.setItem(getInventoryPosition(), itemStack);
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-                getPlugin(), () ->
+                ((Gui<?>) getCollection()).getPlugin(),
+                () ->
                         inventory.getViewers().forEach(humanEntity -> {
                             Player player = Bukkit.getPlayer(humanEntity.getUniqueId());
                             player.updateInventory();
@@ -38,4 +42,5 @@ public abstract class MenuItemCell extends Cell {
     public ItemStack getIcon() {
         return itemStack;
     }
+
 }

@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public interface GuiCell {
+public interface GuiCell<T extends Cell<T>> {
 
     ItemStack getIcon();
 
-    void onClick(InventoryClickEvent e, Player player, Cell cell, Gui gui);
+    void onClick(InventoryClickEvent e, Player player, T cell, Gui<?> gui);
 
 }

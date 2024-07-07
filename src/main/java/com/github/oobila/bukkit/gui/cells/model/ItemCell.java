@@ -1,11 +1,12 @@
-package com.github.oobila.bukkit.gui.cells;
+package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
+import com.github.oobila.bukkit.gui.cells.Cell;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemCell extends Cell {
+public class ItemCell extends Cell<ItemCell> {
 
     private ItemStack itemStack;
 
@@ -23,11 +24,12 @@ public class ItemCell extends Cell {
     }
 
     @Override
-    public void onClick(InventoryClickEvent e, Player player, Cell cell, Gui gui) {
+    public void onClick(InventoryClickEvent e, Player player, ItemCell cell, Gui<?> gui) {
         //no action is needed on an item cell
     }
 
     public static ItemCell newEmptyCell() {
         return new ItemCell(null);
     }
+
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
-public class GuiItemStack extends ItemStack{
+public class GuiItemStack extends ItemStack {
 
     private static final String GUI_KEY = "com/github/oobila/bukkit/gui";
     private static final String TRUE = "true";

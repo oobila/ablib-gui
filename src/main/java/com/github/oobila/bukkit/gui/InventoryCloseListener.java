@@ -1,6 +1,7 @@
 package com.github.oobila.bukkit.gui;
 
 import com.github.oobila.bukkit.common.ABCommon;
+import com.github.oobila.bukkit.gui.cells.Cell;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,20 +14,20 @@ class InventoryCloseListener implements Listener {
     @EventHandler
     public void onGuiClose(InventoryCloseEvent e){
         Player player = Bukkit.getPlayer(e.getPlayer().getUniqueId());
-        Gui gui = GuiManager.lastOpenedGui.get(player);
+        Gui<?> gui = GuiManager.lastOpenedGui.get(player);
         if(gui != null && gui.getTitle().equals(e.getView().getTitle())){
             GuiManager.openGuis.remove(player);
             handleClose(player, e.getInventory(), gui);
         }
     }
 
-    private void handleClose(Player player, Inventory inventory, Gui gui) {
+    private <T extends Cell<T>> void handleClose(Player player, Inventory inventory, Gui<T> gui) {
         if (gui.awaitingUpdate) {
             ABCommon.runTask(() ->
                     handleClose(player, inventory, gui)
             );
         } else {
-            gui.onGuiClose(player, inventory, gui);
+            gui.onGuiClose(player, inventory);
         }
     }
 

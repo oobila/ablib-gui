@@ -1,11 +1,14 @@
-package com.github.oobila.bukkit.gui.cells;
+package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
+import com.github.oobila.bukkit.gui.cells.BaseButtonCell;
+import lombok.experimental.SuperBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class VariableButtonCell extends ButtonCell {
+@SuperBuilder
+public class VariableButtonCell extends BaseButtonCell<VariableButtonCell> {
 
     private final VariableActions variableActions;
 
@@ -15,7 +18,7 @@ public class VariableButtonCell extends ButtonCell {
     }
 
     @Override
-    public void onClick(InventoryClickEvent e, Player player, Cell cell, Gui gui) {
+    public void onClick(InventoryClickEvent e, Player player, VariableButtonCell cell, Gui<?> gui) {
         if (e.getClick().isRightClick()) {
             variableActions.onUp(e, this, gui);
         } else {
@@ -25,8 +28,8 @@ public class VariableButtonCell extends ButtonCell {
     }
 
     public interface VariableActions {
-        void onUp(InventoryClickEvent e, VariableButtonCell button, Gui gui);
-        void onDown(InventoryClickEvent e, VariableButtonCell button, Gui gui);
+        void onUp(InventoryClickEvent e, VariableButtonCell button, Gui<?> gui);
+        void onDown(InventoryClickEvent e, VariableButtonCell button, Gui<?> gui);
     }
 
 }

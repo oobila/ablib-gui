@@ -2,7 +2,7 @@ package com.github.oobila.bukkit.gui;
 
 import com.github.oobila.bukkit.common.ABCommon;
 import com.github.oobila.bukkit.gui.cells.Cell;
-import com.github.oobila.bukkit.gui.cells.ItemCell;
+import com.github.oobila.bukkit.gui.cells.model.ItemCell;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,13 +14,13 @@ import org.bukkit.inventory.Inventory;
 class InventoryInteractionListeners implements Listener {
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e){
+    public <T extends Cell<T>> void onInventoryClick(InventoryClickEvent e){
 
         //get player
         Player player = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
 
         //get gui
-        Gui gui = GuiManager.lastOpenedGui.get(player);
+        Gui<T> gui = (Gui<T>) GuiManager.lastOpenedGui.get(player);
         if(gui == null) return;
         if(!gui.getTitle().equals(e.getView().getTitle())) return;
 
@@ -29,7 +29,7 @@ class InventoryInteractionListeners implements Listener {
 
         //get Cell
         if (e.getRawSlot() < gui.getInventorySize()) { //in gui
-            Cell cell = gui.getInventoryCell(e.getRawSlot());
+            T cell = (T) gui.getInventoryCell(e.getRawSlot());
             if(cell == null) {
                 e.setCancelled(true);
                 return;
@@ -50,12 +50,12 @@ class InventoryInteractionListeners implements Listener {
     }
 
     @EventHandler
-    public void onInventoryDrag(InventoryDragEvent e) {
+    public <T extends Cell<T>> void onInventoryDrag(InventoryDragEvent e) {
         //get player
         Player player = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
 
         //get gui
-        Gui gui = GuiManager.lastOpenedGui.get(player);
+        Gui<T> gui = (Gui<T>) GuiManager.lastOpenedGui.get(player);
         if(gui == null) return;
         if(!gui.getTitle().equals(e.getView().getTitle())) return;
 
@@ -66,7 +66,7 @@ class InventoryInteractionListeners implements Listener {
         updateItemCells(gui, e.getView().getTopInventory());
     }
 
-    private void updateItemCells(Gui gui, Inventory inventory) {
+    private <T extends Cell<T>> void updateItemCells(Gui<T> gui, Inventory inventory) {
         gui.awaitingUpdate = true;
         ABCommon.runTask(() -> {
             try {

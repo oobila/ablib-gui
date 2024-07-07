@@ -2,36 +2,37 @@ package com.github.oobila.bukkit.gui.screens;
 
 import com.github.oobila.bukkit.gui.Gui;
 import com.github.oobila.bukkit.gui.cells.Cell;
-import com.github.oobila.bukkit.gui.cells.CellCollection;
+import com.github.oobila.bukkit.gui.cells.model.NullCell;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import static com.github.oobila.bukkit.common.ABCommon.log;
 
-public abstract class SimpleGui extends Gui {
+public abstract class SimpleGui<T extends Cell<T>> extends Gui<T> {
 
     private final int screenSize;
-    private final int internalSize;
     private int indexOffset;
 
-    protected SimpleGui(Plugin plugin, Player player, String title, CellCollection cellCollection) {
-        super(
-                plugin,
-                player,
-                title == null ? "" : title,
-                cellCollection
-        );
-        this.internalSize = cellCollection.getSize();
-        this.screenSize = getScreenSize(cellCollection.getSize());
+    protected SimpleGui(int allocatedSize, String title, Plugin plugin, Player player) {
+        super(allocatedSize, title, plugin, player);
+        this.screenSize = getScreenSize(size());
+        setup();
+    }
 
-        if (internalSize > 54) {
+    protected SimpleGui(List<T> cells, String title, Plugin plugin, Player player) {
+        super(cells, title, plugin, player);
+        this.screenSize = getScreenSize(size());
+        setup();
+    }
+
+    private void setup() {
+        if (size() > 54) {
             log(Level.SEVERE, "GUI size can only go up to 54");
             return;
         }
-
         indexOffset = getIndexOffset();
     }
 
@@ -52,8 +53,8 @@ public abstract class SimpleGui extends Gui {
     }
 
     private int getIndexOffset() {
-        if (internalSize < 9) {
-            int diff = screenSize - internalSize;
+        if (size() < 9) {
+            int diff = screenSize - size();
             return (int) Math.ceil(diff / 2d);
         } else {
             return 0;
@@ -61,9 +62,9 @@ public abstract class SimpleGui extends Gui {
     }
 
     @Override
-    public Cell getInventoryCell(int position) {
-        if (position >= indexOffset && (position - indexOffset) < internalSize) {
-            return getCell(position - indexOffset);
+    public Cell<?> getInventoryCell(int position) {
+        if (position >= indexOffset && (position - indexOffset) < size()) {
+            return get(position - indexOffset);
         } else {
             return getBlockedCell();
         }
@@ -75,15 +76,8 @@ public abstract class SimpleGui extends Gui {
     }
 
     @Override
-    public ItemStack[] getCellIcons() {
-        ItemStack[] itemStacks = new ItemStack[screenSize];
-        for (int i = 0; i < screenSize; i++){
-            if (i < indexOffset || i >= internalSize + indexOffset) {
-                itemStacks[i] = getBlockedCell().getIcon();
-            } else {
-                itemStacks[i] = getCell(i - indexOffset).getIcon();
-            }
-        }
-        return itemStacks;
+    public NullCell getBlockedCell() {
+        return new NullCell();
     }
+
 }

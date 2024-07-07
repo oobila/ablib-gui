@@ -1,22 +1,22 @@
 package com.github.oobila.bukkit.gui.screens;
 
-import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.Cell;
-import com.github.oobila.bukkit.gui.cells.CellCollection;
-import com.github.oobila.bukkit.gui.cells.SelectionButtonCell;
+import com.github.oobila.bukkit.gui.cells.model.SelectionButtonCell;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SelectionGui<T> extends SimpleGui {
+public abstract class SelectionGui<T> extends SimpleGui<SelectionButtonCell<T>> {
 
-    protected SelectionGui(Plugin plugin, Player player, String title, List<SelectionButtonCell<T>> cells) {
-        super(plugin, player, title, new CellCollection(plugin, player, new ArrayList<>(cells)));
+    protected SelectionGui(int allocatedSize, String title, Plugin plugin, Player player) {
+        super(allocatedSize, title, plugin, player);
     }
 
-    public void onSelection(InventoryClickEvent e, Player player, Cell cell, Gui gui, T object){}
+    protected SelectionGui(List<SelectionButtonCell<T>> cells, String title, Plugin plugin, Player player) {
+        super(cells, title, plugin, player);
+    }
+
+    public abstract void onSelection(InventoryClickEvent e, Player player, SelectionButtonCell<T> cell, T object);
 
 }

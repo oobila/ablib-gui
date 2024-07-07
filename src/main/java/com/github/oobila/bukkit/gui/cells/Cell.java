@@ -1,31 +1,30 @@
 package com.github.oobila.bukkit.gui.cells;
 
+import com.github.oobila.bukkit.gui.collection.CellCollection;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-public abstract class Cell implements GuiCell {
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class Cell<T extends Cell<T>> implements GuiCell<T> {
 
-    private Plugin plugin;
-
-    private CellCollection cellCollection;
-
-    private int index;
-
+    private CellCollection<T> collection;
+    private int collectionPosition;
     private int inventoryPosition;
 
-    public void onCellAdd(Plugin plugin, CellCollection cellCollection, int position) {
-        this.plugin = plugin;
-        this.cellCollection = cellCollection;
-        this.index = position;
+    public void onCollectionBind(CellCollection<T> cellCollection, int position) {
+        this.collection = cellCollection;
+        this.collectionPosition = position;
     }
 
-    public void onBind(int inventoryPosition) {
+    public void onInventoryBind(int inventoryPosition) {
         this.inventoryPosition = inventoryPosition;
     }
 
-    public void replace(Cell cell) {
-        cellCollection.setCell(index, cell);
+    public void replace(T cell) {
+        collection.set(collectionPosition, cell);
     }
-
 }

@@ -4,88 +4,107 @@ import com.github.oobila.bukkit.common.utils.MaterialUtil;
 import com.github.oobila.bukkit.common.utils.model.BlockColor;
 import com.github.oobila.bukkit.common.utils.model.ColoredMaterialType;
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.ButtonCell;
+import com.github.oobila.bukkit.gui.cells.model.ButtonCell;
 import com.github.oobila.bukkit.gui.cells.Cell;
-import com.github.oobila.bukkit.gui.cells.CellCollection;
-import com.github.oobila.bukkit.gui.cells.CellCollectionInterface;
+import com.github.oobila.bukkit.gui.cells.model.NullCell;
 import com.github.oobila.bukkit.itemstack.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collections;
-import java.util.logging.Level;
+import java.util.List;
 
-import static com.github.oobila.bukkit.common.ABCommon.log;
-
-public class MultiPageGui extends Gui implements CellCollectionInterface {
+public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
 
     public static final int PAGE_SIZE = 45;
-    public static final int _2_PAGES = 90;
-    public static final int _3_PAGES = 135;
-    public static final int _4_PAGES = 180;
-    public static final int _5_PAGES = 225;
-    public static final int _6_PAGES = 270;
-    public static final int _7_PAGES = 315;
-    public static final int _8_PAGES = 360;
-    public static final int _9_PAGES = 405;
-    public static final int MAX_SIZE = 405;
-
-    private final ButtonCell[] pageIcons = new ButtonCell[9];
-    private final ButtonCell[] selectedPageIcons = new ButtonCell[9];
-    private Material selectedPageMaterial = Material.BLACK_STAINED_GLASS_PANE;
-    private Material pageMaterial;
-    private int pages;
+    private final Cell<?>[] header = new Cell[9];
+    private Material pageMaterial = Material.PAPER;
+    private Material tabMaterial;
+    private final int pages;
     private int pageIndex = 0;
 
-    public MultiPageGui(Plugin plugin, Player player, String title, CellCollection cellCollection) {
-        this(plugin, player, title, cellCollection, BlockColor.WHITE);
+    protected MultiPageGui(String title, Plugin plugin, Player player, BlockColor blockColor) {
+        this(64, title, plugin, player, blockColor);
     }
 
-    public MultiPageGui(Plugin plugin, Player player, String title, CellCollection cellCollection, BlockColor blockColor) {
-        super(plugin, player, title, cellCollection);
-
-        if (cellCollection.getSize() > MAX_SIZE) {
-            log(Level.SEVERE, "Cell collection is too big for this multi-page GUI");
-            return;
+    protected MultiPageGui(int pages, String title, Plugin plugin, Player player, BlockColor blockColor) {
+        super(pages * PAGE_SIZE, title, plugin, player);
+        this.pages = pages;
+        this.tabMaterial = MaterialUtil.getColoredMaterial(blockColor, ColoredMaterialType.STAINED_GLASS_PANE);
+        if (this.tabMaterial.equals(Material.LIGHT_GRAY_STAINED_GLASS_PANE)) {
+            this.tabMaterial = Material.WHITE_STAINED_GLASS_PANE;
         }
-
-        this.pages = (int) Math.ceil((cellCollection.getSize()) / 45d);
-        this.pageMaterial = MaterialUtil.getColoredMaterial(blockColor, ColoredMaterialType.STAINED_GLASS_PANE);
-        if (blockColor.equals(BlockColor.BLACK)) {
-            this.selectedPageMaterial = Material.WHITE_STAINED_GLASS_PANE;
-        } else if (blockColor.equals(BlockColor.LIGHT_GRAY)) {
-            this.pageMaterial = Material.WHITE_STAINED_GLASS_PANE;
-        }
-        setPageButtons();
+        updateHeader();
     }
 
-    private void setPageButtons() {
-        for (int i = 0; i < 9; i++) {
-            final int index = i;
-            pageIcons[i] = new ButtonCell(
-                    new ItemStackBuilder(pageMaterial)
-                            .setDisplayName("Page " + (i + 1))
-                            .setCount(i + 1)
-                            .build()
-            ).onClick((e, player, button, gui) -> {
-                MultiPageGui mpg = (MultiPageGui) gui;
-                mpg.pageIndex = index;
-                mpg.reload();
-            });
-            selectedPageIcons[i] = new ButtonCell(
-                    new ItemStackBuilder(selectedPageMaterial)
-                            .setDisplayName("Page " + (i + 1))
-                            .setLore(Collections.singletonList("Current page"))
-                            .setCount(i + 1)
-                            .build()
-            ).onClick((e, player, button, gui) -> {
-                MultiPageGui mpg = (MultiPageGui) gui;
-                mpg.pageIndex = index;
-                mpg.reload();
-            });
+    protected MultiPageGui(List<T> cells, String title, Plugin plugin, Player player, BlockColor blockColor) {
+        super(cells, title, plugin, player);
+        this.pages = (int) Math.ceil((double) cells.size() / PAGE_SIZE);
+        this.tabMaterial = MaterialUtil.getColoredMaterial(blockColor, ColoredMaterialType.STAINED_GLASS_PANE);
+        if (this.tabMaterial.equals(Material.LIGHT_GRAY_STAINED_GLASS_PANE)) {
+            this.tabMaterial = Material.WHITE_STAINED_GLASS_PANE;
         }
+        updateHeader();
+    }
+
+    private ButtonCell getPageIcon() {
+        return new ButtonCell(
+                new ItemStackBuilder(pageMaterial)
+                        .setDisplayName(String.format("Page %s of %s", pageIndex + 1, pages))
+                        .setCount(pageIndex + 1)
+                        .build()
+        );
+    }
+
+    private void updateHeader() {
+        for (int index = 0; index < 9; index++) {
+            switch (index) {
+                case 4:
+                    header[index] = getPageIcon();
+                    break;
+                case 3:
+                    header[index] = previousButton();
+                    break;
+                case 5:
+                    header[index] = nextButton();
+                    break;
+                default:
+                    header[index] = new NullCell();
+                    break;
+            }
+        }
+    }
+
+    private ButtonCell previousButton() {
+        return ButtonCell.builder()
+                .itemStack(
+                        new ItemStackBuilder(tabMaterial)
+                                .setDisplayName("Previous Page")
+                                .build()
+                )
+                .buttonClickAction((e, player, button, gui) -> {
+                    MultiPageGui<T> mpg = (MultiPageGui<T>) gui;
+                    mpg.pageIndex = mpg.pageIndex == 0 ? mpg.pageIndex : mpg.pageIndex - 1;
+                    header[4] = getPageIcon();
+                    mpg.reload();
+                })
+                .build();
+    }
+
+    private ButtonCell nextButton() {
+        return ButtonCell.builder()
+                .itemStack(
+                        new ItemStackBuilder(tabMaterial)
+                                .setDisplayName("Next Page")
+                                .build()
+                )
+                .buttonClickAction((e, player, button, gui) -> {
+                    MultiPageGui<T> mpg = (MultiPageGui<T>) gui;
+                    mpg.pageIndex = mpg.pageIndex == (pages - 1) ? mpg.pageIndex : mpg.pageIndex + 1;
+                    header[4] = getPageIcon();
+                    mpg.reload();
+                })
+                .build();
     }
 
     @Override
@@ -94,30 +113,18 @@ public class MultiPageGui extends Gui implements CellCollectionInterface {
     }
 
     @Override
-    public Cell getInventoryCell(int position) {
+    public Cell<?> getInventoryCell(int position) {
         if (position < 9) {
-            if (pages > (position)) {
-                if (pageIndex == position) {
-                    return selectedPageIcons[pageIndex];
-                } else {
-                    return pageIcons[position];
-                }
-            } else {
-                return getBlockedCell();
-            }
-        } else if ((position - 9) < getSize()){
-            return getCell(pageIndex * PAGE_SIZE + (position - 9));
+            return header[position];
+        } else if ((position - 9) < size()){
+            return get(pageIndex * PAGE_SIZE + (position - 9));
         } else {
             return getBlockedCell();
         }
     }
 
     @Override
-    public ItemStack[] getCellIcons() {
-        ItemStack[] itemStacks = new ItemStack[54];
-        for (int i = 0; i < 54; i++) {
-            itemStacks[i] = getInventoryCell(i).getIcon();
-        }
-        return itemStacks;
+    public NullCell getBlockedCell() {
+        return new NullCell();
     }
 }
