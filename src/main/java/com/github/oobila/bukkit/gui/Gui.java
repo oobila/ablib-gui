@@ -1,5 +1,6 @@
 package com.github.oobila.bukkit.gui;
 
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.cells.model.NullCell;
 import com.github.oobila.bukkit.gui.cells.Cell;
 import com.github.oobila.bukkit.gui.collection.CellCollection;
@@ -15,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 
 @Getter
-public abstract class Gui<T extends Cell<T>> extends CellCollection<T> implements GuiInterface {
+public abstract class Gui extends CellCollection implements GuiInterface {
 
     private static final InventoryType inventoryType = InventoryType.PLAYER;
     private final String title;
@@ -32,7 +33,7 @@ public abstract class Gui<T extends Cell<T>> extends CellCollection<T> implement
         this.player = player;
     }
 
-    protected Gui(List<T> cells, String title, Plugin plugin, Player player) {
+    protected Gui(List<GuiCell> cells, String title, Plugin plugin, Player player) {
         super(cells);
         this.title = title == null ? "" : title;
         this.plugin = plugin;
@@ -43,7 +44,7 @@ public abstract class Gui<T extends Cell<T>> extends CellCollection<T> implement
 
     protected void onGuiClose(Player player, Inventory inventory){}
 
-    public Gui<T> open() {
+    public Gui open() {
         //create inventory
         Inventory inventory = createInventory();
 

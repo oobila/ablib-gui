@@ -1,6 +1,7 @@
 package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.cells.MenuItemCell;
 import com.github.oobila.bukkit.itemstack.CustomItemStack;
 import com.github.oobila.bukkit.itemstack.ItemStackProxy;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class NullCell extends MenuItemCell<NullCell> {
+public class NullCell extends MenuItemCell {
 
     private static final ItemStack defaultItemStack = new NullItemStack(Material.GRAY_STAINED_GLASS_PANE);
 
@@ -26,7 +27,7 @@ public class NullCell extends MenuItemCell<NullCell> {
     }
 
     @Override
-    public void onClick(InventoryClickEvent e, Player player, NullCell cell, Gui<?> gui) {
+    public void onClick(InventoryClickEvent e, Player player, GuiCell cell, Gui gui) {
         e.setCancelled(true);
     }
 

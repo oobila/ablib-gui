@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @SuperBuilder
-public abstract class MenuItemCell<T extends MenuItemCell<T>> extends Cell<T> {
+public abstract class MenuItemCell extends Cell {
 
     private GuiItemStack itemStack;
 
@@ -29,7 +29,7 @@ public abstract class MenuItemCell<T extends MenuItemCell<T>> extends Cell<T> {
         setItemStack(itemStack);
         inventory.setItem(getInventoryPosition(), itemStack);
         Bukkit.getScheduler().scheduleSyncDelayedTask(
-                ((Gui<?>) getCollection()).getPlugin(),
+                ((Gui) getCollection()).getPlugin(),
                 () ->
                         inventory.getViewers().forEach(humanEntity -> {
                             Player player = Bukkit.getPlayer(humanEntity.getUniqueId());
@@ -43,8 +43,8 @@ public abstract class MenuItemCell<T extends MenuItemCell<T>> extends Cell<T> {
         return itemStack;
     }
 
-    public abstract static class MenuItemCellBuilder<S extends MenuItemCell<S>, C extends MenuItemCell<S>, B extends MenuItemCell.MenuItemCellBuilder<S, C, B>>
-            extends Cell.CellBuilder<S, C, B> {
+    public abstract static class MenuItemCellBuilder<C extends MenuItemCell, B extends MenuItemCell.MenuItemCellBuilder<C, B>>
+            extends Cell.CellBuilder<C, B> {
 
         public B itemStack(ItemStack itemStack) {
             this.itemStack = new GuiItemStack(itemStack);

@@ -11,12 +11,12 @@ import java.util.Collection;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CellCollectionUtil {
 
-    public static  CellCollection<ItemCell> fromItemStacks(ItemStack[] itemStacks) {
+    public static  CellCollection fromItemStacks(ItemStack[] itemStacks) {
         return fromItemStacks(Arrays.stream(itemStacks).toList());
     }
 
-    public static CellCollection<ItemCell> fromItemStacks(Collection<ItemStack> itemStacks) {
-        CellCollection<ItemCell> cellCollection = new CellCollection<>(itemStacks.size());
+    public static CellCollection fromItemStacks(Collection<ItemStack> itemStacks) {
+        CellCollection cellCollection = new CellCollection(itemStacks.size());
         cellCollection.addAll(
                 itemStacks.stream().map(
                         ItemCell::new

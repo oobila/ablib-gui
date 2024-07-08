@@ -1,14 +1,15 @@
 package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.BaseButtonCell;
+import com.github.oobila.bukkit.gui.cells.ButtonCell;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import lombok.experimental.SuperBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 @SuperBuilder
-public class ToggleButtonCell extends BaseButtonCell<ToggleButtonCell> {
+public class ToggleButtonCell extends ButtonCell {
 
     private boolean enabled;
     private final ItemStack enabledItemStack;
@@ -32,7 +33,7 @@ public class ToggleButtonCell extends BaseButtonCell<ToggleButtonCell> {
     }
 
     @Override
-    public void onClick(InventoryClickEvent e, Player player, ToggleButtonCell cell, Gui<?> gui) {
+    public void onClick(InventoryClickEvent e, Player player, GuiCell cell, Gui gui) {
         if (enabled) {
             disableClickAction.onButtonClick(e, player, this, gui);
             updateItemStack(disabledItemStack, player.getOpenInventory().getTopInventory());
@@ -45,7 +46,7 @@ public class ToggleButtonCell extends BaseButtonCell<ToggleButtonCell> {
     }
 
     public interface ButtonClickAction {
-        void onButtonClick(InventoryClickEvent e, Player player, ToggleButtonCell button, Gui<?> gui);
+        void onButtonClick(InventoryClickEvent e, Player player, ToggleButtonCell button, Gui gui);
     }
 
 }

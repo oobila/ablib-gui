@@ -14,8 +14,8 @@ public class GuiManager {
 
     private static final Map<UUID, Map<String, Object>> playerSelectionData = new HashMap<>();
     static Plugin plugin;
-    static Map<Player, Gui<?>> lastOpenedGui = new HashMap<>();
-    static Map<Player, Gui<?>> openGuis = new HashMap<>();
+    static Map<Player, Gui> lastOpenedGui = new HashMap<>();
+    static Map<Player, Gui> openGuis = new HashMap<>();
 
     private GuiManager() {
     }

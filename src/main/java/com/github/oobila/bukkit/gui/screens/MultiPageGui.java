@@ -4,8 +4,9 @@ import com.github.oobila.bukkit.common.utils.MaterialUtil;
 import com.github.oobila.bukkit.common.utils.model.BlockColor;
 import com.github.oobila.bukkit.common.utils.model.ColoredMaterialType;
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.model.ButtonCell;
+import com.github.oobila.bukkit.gui.cells.ButtonCell;
 import com.github.oobila.bukkit.gui.cells.Cell;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.cells.model.NullCell;
 import com.github.oobila.bukkit.itemstack.ItemStackBuilder;
 import org.bukkit.Material;
@@ -14,10 +15,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
+public abstract class MultiPageGui extends Gui {
 
     public static final int PAGE_SIZE = 45;
-    private final Cell<?>[] header = new Cell[9];
+    private final Cell[] header = new Cell[9];
     private Material pageMaterial = Material.PAPER;
     private Material tabMaterial;
     private final int pages;
@@ -37,7 +38,7 @@ public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
         updateHeader();
     }
 
-    protected MultiPageGui(List<T> cells, String title, Plugin plugin, Player player, BlockColor blockColor) {
+    protected MultiPageGui(List<GuiCell> cells, String title, Plugin plugin, Player player, BlockColor blockColor) {
         super(cells, title, plugin, player);
         this.pages = (int) Math.ceil((double) cells.size() / PAGE_SIZE);
         this.tabMaterial = MaterialUtil.getColoredMaterial(blockColor, ColoredMaterialType.STAINED_GLASS_PANE);
@@ -83,7 +84,7 @@ public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
                                 .build()
                 )
                 .buttonClickAction((e, player, button, gui) -> {
-                    MultiPageGui<T> mpg = (MultiPageGui<T>) gui;
+                    MultiPageGui mpg = (MultiPageGui) gui;
                     mpg.pageIndex = mpg.pageIndex == 0 ? mpg.pageIndex : mpg.pageIndex - 1;
                     header[4] = getPageIcon();
                     mpg.reload();
@@ -99,7 +100,7 @@ public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
                                 .build()
                 )
                 .buttonClickAction((e, player, button, gui) -> {
-                    MultiPageGui<T> mpg = (MultiPageGui<T>) gui;
+                    MultiPageGui mpg = (MultiPageGui) gui;
                     mpg.pageIndex = mpg.pageIndex == (pages - 1) ? mpg.pageIndex : mpg.pageIndex + 1;
                     header[4] = getPageIcon();
                     mpg.reload();
@@ -113,18 +114,18 @@ public abstract class MultiPageGui<T extends Cell<T>> extends Gui<T> {
     }
 
     @Override
-    public <S extends Cell<S>> S getInventoryCell(int position) {
+    public GuiCell getInventoryCell(int position) {
         if (position < 9) {
-            return (S) header[position];
+            return header[position];
         } else if ((position - 9) < getAllocatedSize()){
-            S cell = (S) get(pageIndex * PAGE_SIZE + (position - 9));
+            GuiCell cell = get(pageIndex * PAGE_SIZE + (position - 9));
             if (cell == null) {
-                return (S) this.getNullCell();
+                return this.getNullCell();
             } else {
                 return cell;
             }
         } else {
-            return (S) this.getNullCell();
+            return this.getNullCell();
         }
     }
 

@@ -1,14 +1,15 @@
 package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.BaseButtonCell;
+import com.github.oobila.bukkit.gui.cells.ButtonCell;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.screens.SelectionGui;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class SelectionButtonCell<T> extends BaseButtonCell<SelectionButtonCell<T>> {
+public class SelectionButtonCell<T> extends ButtonCell {
 
     @Getter
     private final T selectionObject;
@@ -21,12 +22,12 @@ public class SelectionButtonCell<T> extends BaseButtonCell<SelectionButtonCell<T
     }
 
     @Override
-    public void onClick(InventoryClickEvent e, Player player, SelectionButtonCell<T> cell, Gui<?> gui) {
+    public void onClick(InventoryClickEvent e, Player player, GuiCell cell, Gui gui) {
         e.setCancelled(true);
         if (disableSelection) {
             return;
         }
-        ((SelectionGui<T>) gui).onSelection(e, player, cell, selectionObject);
+        ((SelectionGui<T>) gui).onSelection(e, player, (SelectionButtonCell<T>) cell, selectionObject);
     }
 
     public void disableSelection() {

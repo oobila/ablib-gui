@@ -1,7 +1,7 @@
 package com.github.oobila.bukkit.gui.screens;
 
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.Cell;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -10,7 +10,7 @@ import java.util.logging.Level;
 
 import static com.github.oobila.bukkit.common.ABCommon.log;
 
-public abstract class SimpleGui<T extends Cell<T>> extends Gui<T> {
+public abstract class SimpleGui extends Gui {
 
     private final int screenSize;
     private int indexOffset;
@@ -21,7 +21,7 @@ public abstract class SimpleGui<T extends Cell<T>> extends Gui<T> {
         setup();
     }
 
-    protected SimpleGui(List<T> cells, String title, Plugin plugin, Player player) {
+    protected SimpleGui(List<GuiCell> cells, String title, Plugin plugin, Player player) {
         super(cells, title, plugin, player);
         this.screenSize = getScreenSize(getAllocatedSize());
         setup();
@@ -61,16 +61,16 @@ public abstract class SimpleGui<T extends Cell<T>> extends Gui<T> {
     }
 
     @Override
-    public <S extends Cell<S>> S getInventoryCell(int position) {
+    public GuiCell getInventoryCell(int position) {
         if (position >= indexOffset && (position - indexOffset) < getAllocatedSize()) {
-            S cell = (S) get(position - indexOffset);
+            GuiCell cell = get(position - indexOffset);
             if (cell == null) {
-                return (S) this.getNullCell();
+                return this.getNullCell();
             } else {
                 return cell;
             }
         } else {
-            return (S) this.getNullCell();
+            return this.getNullCell();
         }
     }
 
