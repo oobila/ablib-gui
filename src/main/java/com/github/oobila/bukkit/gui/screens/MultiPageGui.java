@@ -4,7 +4,7 @@ import com.github.oobila.bukkit.common.utils.MaterialUtil;
 import com.github.oobila.bukkit.common.utils.model.BlockColor;
 import com.github.oobila.bukkit.common.utils.model.ColoredMaterialType;
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.ButtonCell;
+import com.github.oobila.bukkit.gui.cells.model.ButtonCell;
 import com.github.oobila.bukkit.gui.cells.Cell;
 import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.cells.model.NullCell;

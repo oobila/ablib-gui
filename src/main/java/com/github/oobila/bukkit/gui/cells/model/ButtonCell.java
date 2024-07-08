@@ -1,7 +1,9 @@
-package com.github.oobila.bukkit.gui.cells;
+package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.chat.Message;
 import com.github.oobila.bukkit.gui.Gui;
+import com.github.oobila.bukkit.gui.cells.GuiCell;
+import com.github.oobila.bukkit.gui.cells.MenuItemCell;
 import com.github.oobila.bukkit.itemstack.IItemStackProxy;
 import lombok.experimental.SuperBuilder;
 import org.bukkit.entity.Player;

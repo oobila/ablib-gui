@@ -1,7 +1,6 @@
 package com.github.oobila.bukkit.gui.cells.model;
 
 import com.github.oobila.bukkit.gui.Gui;
-import com.github.oobila.bukkit.gui.cells.ButtonCell;
 import com.github.oobila.bukkit.gui.cells.GuiCell;
 import lombok.experimental.SuperBuilder;
 import org.bukkit.entity.Player;
