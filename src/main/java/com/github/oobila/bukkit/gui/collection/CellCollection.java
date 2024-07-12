@@ -9,6 +9,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -26,16 +27,16 @@ public class CellCollection implements CellCollectionInterface {
     @Getter
     private final int allocatedSize;
     @Delegate(types = OperableList.class)
-    private final List<GuiCell> cells;
+    private final List<GuiCell> cells = new ArrayList<>();
 
     public CellCollection(int allocatedSize) {
         this.allocatedSize = allocatedSize;
-        this.cells = new ArrayList<>(allocatedSize);
+        this.cells.addAll(Collections.nCopies(allocatedSize, null));
     }
 
     public CellCollection(List<GuiCell> cells) {
         this.allocatedSize = cells.size();
-        this.cells = new ArrayList<>(cells);
+        this.cells.addAll(cells);
     }
 
     @Override
