@@ -5,7 +5,10 @@ import com.github.oobila.bukkit.gui.Gui;
 import com.github.oobila.bukkit.gui.cells.GuiCell;
 import com.github.oobila.bukkit.gui.cells.MenuItemCell;
 import com.github.oobila.bukkit.itemstack.IItemStackProxy;
+import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +18,9 @@ import java.time.ZonedDateTime;
 @SuperBuilder
 public class ButtonCell extends MenuItemCell implements IItemStackProxy<ButtonCell> {
 
+    @Setter(AccessLevel.PROTECTED)
     private ButtonClickAction buttonClickAction;
+    @Setter(AccessLevel.PROTECTED)
     private long cooldownSeconds;
     private ZonedDateTime dateTime;
 
@@ -39,6 +44,7 @@ public class ButtonCell extends MenuItemCell implements IItemStackProxy<ButtonCe
                         .send(player);
             }
             e.setCancelled(true);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         }
     }
 

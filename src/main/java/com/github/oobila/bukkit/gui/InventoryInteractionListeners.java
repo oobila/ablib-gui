@@ -35,9 +35,11 @@ class InventoryInteractionListeners implements Listener {
                 return;
             }
 
-            //stop the shift click action but acknowledge as normal click and continue
-            if (e.isShiftClick()) {
-                e.setCancelled(true);
+            if (!(cell instanceof ItemCell itemCell)) {
+                //stop the shift click action but acknowledge as normal click and continue
+                if (e.isShiftClick()) {
+                    e.setCancelled(true);
+                }
             }
 
             //make on click action
