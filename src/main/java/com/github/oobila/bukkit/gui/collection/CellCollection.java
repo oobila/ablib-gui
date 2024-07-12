@@ -31,7 +31,6 @@ public class CellCollection implements CellCollectionInterface {
 
     public CellCollection(int allocatedSize) {
         this.allocatedSize = allocatedSize;
-        //will add later
     }
 
     public CellCollection(List<GuiCell> cells) {
