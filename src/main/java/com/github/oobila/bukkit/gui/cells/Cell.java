@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.bukkit.entity.Player;
 
 @Getter
 @SuperBuilder
@@ -26,5 +27,10 @@ public abstract class Cell implements GuiCell {
 
     public void replace(GuiCell cell) {
         collection.set(collectionPosition, cell);
+    }
+
+    @Override
+    public void clickSound(Player player) {
+        //do nothing
     }
 }

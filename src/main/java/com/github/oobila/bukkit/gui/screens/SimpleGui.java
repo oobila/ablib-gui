@@ -12,27 +12,16 @@ import static com.github.oobila.bukkit.common.ABCommon.log;
 
 public abstract class SimpleGui extends Gui {
 
-    private final int screenSize;
-    private int indexOffset;
+    protected SimpleGui(String title, Plugin plugin, Player player) {
+        this(54, title, plugin, player);
+    }
 
     protected SimpleGui(int allocatedSize, String title, Plugin plugin, Player player) {
         super(allocatedSize, title, plugin, player);
-        this.screenSize = getScreenSize(getAllocatedSize());
-        setup();
     }
 
     protected SimpleGui(List<GuiCell> cells, String title, Plugin plugin, Player player) {
         super(cells, title, plugin, player);
-        this.screenSize = getScreenSize(getAllocatedSize());
-        setup();
-    }
-
-    private void setup() {
-        if (size() > 54) {
-            log(Level.SEVERE, "GUI size can only go up to 54");
-            return;
-        }
-        indexOffset = getIndexOffset();
     }
 
     private static int getScreenSize(int size) {
@@ -53,7 +42,7 @@ public abstract class SimpleGui extends Gui {
 
     private int getIndexOffset() {
         if (getAllocatedSize() < 9) {
-            int diff = screenSize - getAllocatedSize();
+            int diff = getScreenSize(size()) - getAllocatedSize();
             return (int) Math.ceil(diff / 2d);
         } else {
             return 0;
@@ -62,6 +51,7 @@ public abstract class SimpleGui extends Gui {
 
     @Override
     public GuiCell getInventoryCell(int position) {
+        int indexOffset = getIndexOffset();
         if (position >= indexOffset && (position - indexOffset) < getAllocatedSize()) {
             GuiCell cell = get(position - indexOffset);
             if (cell == null) {
@@ -76,7 +66,7 @@ public abstract class SimpleGui extends Gui {
 
     @Override
     public int getInventorySize() {
-        return screenSize;
+        return getScreenSize(size());
     }
 
 }

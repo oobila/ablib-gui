@@ -44,8 +44,13 @@ public class ButtonCell extends MenuItemCell implements IItemStackProxy<ButtonCe
                         .send(player);
             }
             e.setCancelled(true);
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
         }
+        clickSound(player);
+    }
+
+    @Override
+    public void clickSound(Player player) {
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, .5f, .5f);
     }
 
     @Override

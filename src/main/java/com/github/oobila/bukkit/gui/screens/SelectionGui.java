@@ -10,6 +10,10 @@ import java.util.List;
 
 public abstract class SelectionGui<T> extends SimpleGui {
 
+    protected SelectionGui(String title, Plugin plugin, Player player) {
+        this(54, title, plugin, player);
+    }
+
     protected SelectionGui(int allocatedSize, String title, Plugin plugin, Player player) {
         super(allocatedSize, title, plugin, player);
     }

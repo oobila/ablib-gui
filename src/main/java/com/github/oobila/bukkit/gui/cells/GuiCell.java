@@ -12,5 +12,6 @@ public interface GuiCell {
     void onClick(InventoryClickEvent e, Player player, GuiCell cell, Gui gui);
     void onCollectionBind(CellCollection cellCollection, int position);
     void onInventoryBind(int inventoryPosition);
+    void clickSound(Player player);
 
 }
