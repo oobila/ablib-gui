@@ -41,8 +41,8 @@ public abstract class SimpleGui extends Gui {
     }
 
     private int getIndexOffset() {
-        if (getAllocatedSize() < 9) {
-            int diff = getScreenSize(size()) - getAllocatedSize();
+        if (size() < 9) {
+            int diff = getScreenSize(size()) - size();
             return (int) Math.ceil(diff / 2d);
         } else {
             return 0;
@@ -52,7 +52,7 @@ public abstract class SimpleGui extends Gui {
     @Override
     public GuiCell getInventoryCell(int position) {
         int indexOffset = getIndexOffset();
-        if (position >= indexOffset && (position - indexOffset) < getAllocatedSize()) {
+        if (position >= indexOffset && (position - indexOffset) < size()) {
             GuiCell cell = get(position - indexOffset);
             if (cell == null) {
                 return this.getNullCell();

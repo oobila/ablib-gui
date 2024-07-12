@@ -27,6 +27,7 @@ public class TextEntryGui {
     public void open() {
         new AnvilGUI.Builder()
                 .plugin(plugin)
+                .title(title)
                 .text(originalText)
                 .itemLeft(new ItemStackBuilder(Material.NAME_TAG)
                         .setDisplayName(originalText)
