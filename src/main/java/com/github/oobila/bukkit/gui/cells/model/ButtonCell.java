@@ -21,6 +21,10 @@ public class ButtonCell extends MenuItemCell implements IItemStackProxy<ButtonCe
     @Setter(AccessLevel.PROTECTED)
     private ButtonClickAction buttonClickAction;
     @Setter(AccessLevel.PROTECTED)
+    private Sound sound = Sound.UI_BUTTON_CLICK;
+    @Setter(AccessLevel.PROTECTED)
+    private float soundVolume = .5f;
+    @Setter(AccessLevel.PROTECTED)
     private long cooldownSeconds;
     private ZonedDateTime dateTime;
 
@@ -50,7 +54,9 @@ public class ButtonCell extends MenuItemCell implements IItemStackProxy<ButtonCe
 
     @Override
     public void clickSound(Player player) {
-        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, .5f, .5f);
+        if (sound != null) {
+            player.playSound(player.getLocation(), sound, soundVolume, soundVolume);
+        }
     }
 
     @Override
