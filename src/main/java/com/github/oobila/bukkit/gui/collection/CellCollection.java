@@ -5,6 +5,7 @@ import com.github.oobila.bukkit.gui.java.OperableList;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,15 +26,16 @@ public class CellCollection implements CellCollectionInterface {
     @Getter
     private final int allocatedSize;
     @Delegate(types = OperableList.class)
-    private final List<GuiCell> cells = new ArrayList<>();
+    private final List<GuiCell> cells;
 
     public CellCollection(int allocatedSize) {
         this.allocatedSize = allocatedSize;
+        this.cells = new ArrayList<>(allocatedSize);
     }
 
     public CellCollection(List<GuiCell> cells) {
         this.allocatedSize = cells.size();
-        addAll(cells);
+        this.cells = new ArrayList<>(cells);
     }
 
     @Override
