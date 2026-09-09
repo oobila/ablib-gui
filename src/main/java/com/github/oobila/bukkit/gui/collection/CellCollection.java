@@ -5,11 +5,9 @@ import com.github.oobila.bukkit.gui.java.OperableList;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
